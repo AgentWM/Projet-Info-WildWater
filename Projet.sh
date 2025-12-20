@@ -2,7 +2,7 @@
 
 #Timeur demandé peu importe que le programme aboutisse ou fasse une erreur
 debut_chrono=$(date +%s%3N)
-trap 'echo "La durée totale du traitement a été de $(($(date +%s%3N) - $debut_chrono)) secondes."' EXIT
+trap 'echo "La durée totale du traitement a été de $(($(date +%s%3N) - $debut_chrono)) millisecondes."' EXIT
 
 #Vérifications des conditions de base, nb d arg
 if [ $# -ne 3 ]; then
@@ -16,7 +16,7 @@ if [ ! -f "$1" ]; then
 fi
 
 if [ "$2" != "histo" ] && [ "$2" != "leaks" ]; then
-	echo "Erreur : Le 2ème argument donné n'est ni "histo" ni "leaks"."
+	echo "Erreur : Le 2ème argument donné n'est ni 'histo' ni 'leaks'."
 	exit 1
 fi
 #les exécutables C
@@ -41,14 +41,20 @@ fi
 #Les cas selon ce qu'on nous demande en argument
 if [ "$2" = "histo" ]; then
 	if [ "$3" = "max" ]; then #On prend juste les lignes usines
-		awk -F ';' '$1=="-" && $3=='-' {print $2 ";" $4/1000}' "$1" > tri_max.txt
+		awk -F ';' '$1=="-" && $3=="-" {print $2 ";" $4/1000}' "$1" > tri_max.txt
 		(echo "Station(ID);Capacité maximale de traitement(M.m³/an)"; ./exec_AVL tri_max.txt) > vol_max.dat
+		rm tri_max.txt
+
 	elif [ "$3" = "src" ]; then #On prend les lignes sources -> usines
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" $4/1000}' "$1" > tri_capt.txt
 		(echo "Station(ID);Volume total capté depuis les sources(M.m³/an)"; ./exec_AVL tri_capt.txt) > vol_captation.txt
+		rm tri_capt.txt
+
 	elif [ "$3" = "real" ]; then #On prend les lignes sources -> usines mais on enlève le volume de fuite du volume total
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" ($4 * (1 - $5/100)) / 1000}' "$1" > tri_reel.txt
 		(echo "Station(ID);Volume total traité(M.m³/an)"; ./exec_AVL tri_reel.txt) > vol_traitement.tmp
+		rm tri_reel.txt
+
 	else
 		echo "Erreur : Le 3ème argument n'est pas valide."
 		exit 1
@@ -61,9 +67,12 @@ if [ "$2" =  "leaks" ]; then
 		exit 1
 	fi #On prend les lignes usines avec le bonne ID et toutes les autres qui en découlent
 	awk -F ';' -v id="$3" '($1=="-" && $2==id) || ($1==id) {print $0}' "$1" > liste_leaks.txt
-	if [ $(./exec_fuites liste_leaks.txt) e -1 ]; then #Cas où l'ID est invalide
-		echo "Erreur : L'identifiant d'usine n'existe pas."
-		exit 1
+
+	historique="leaks.dat" #On nous demande d'avoir un fichier historique pour chaque usine qu on regardera
+	if [ ! -f "$historique" ]; then
+		echo "Station(ID);Volume fuité(M.m^3/an)" > "$historique"
 	fi
-	(echo "Station(ID);Volume fuité(M.m^3/an)"; cat liste_leaks.txt; echo "$(./exec_fuites listes_leaks.txt) M.m^3 sont perdues par an.") > vol_fuites.dat
+
+	./exec_fuites liste_leaks.txt "$3" >> "$historique"
+	rm liste_leaks.txt
 fi
