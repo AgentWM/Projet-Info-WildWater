@@ -1,18 +1,25 @@
 #!/bin/bash
 
+#Timeur demandé peu importe que le programme aboutisse ou fasse une erreur
 debut_chrono=$(date +%s%3N)
 trap 'echo "La durée totale du traitement a été de $(($(date +%s%3N) - $debut_chrono)) secondes."' EXIT
 
-if [ $# -ne 2 ]; then
-	echo "Erreur  : il faut impérativement 2 arguments."
+#Vérifications des conditions de base, nb d arg
+if [ $# -ne 3 ]; then
+	echo "Erreur  : il faut impérativement 3 arguments."
+	exit 1
+fi
+#les args dans l'ordre demandé
+if [ ! -f "$1" ]; then
+	echo "Erreur : Le fichier '$1' n'existe pas."
 	exit 1
 fi
 
-if [ "$1" != "histo" ] && [ "$1" != "leaks" ]; then
-	echo "Erreur : Les arguments donnés n'existent pas."
+if [ "$2" != "histo" ] && [ "$2" != "leaks" ]; then
+	echo "Erreur : Le 2ème argument donné n'est ni "histo" ni "leaks"."
 	exit 1
 fi
-
+#les exécutables C
 verif_exec_AVL="exec_AVL"
 if [ ! -f "$verif_exec_AVL" ]; then
 	make
@@ -31,20 +38,24 @@ if [ ! -f "$verif_exec_fuites" ]; then
 	fi
 fi
 
-if [ "$1" = "histo" ]; then
-	if [ "$2" = "max" ]; then
-		awk -F ';' '$2=="SOURCE" && NR>1 {print $1 ";" $4}' "$INPUT_CSV" > input_c.txt
-		./exec_AVL input_c.txt > output.txt
-	elif [ "$2" = "src" ]; then
+#Les cas selon ce qu'on nous demande en argument
+if [ "$2" = "histo" ]; then
+	if [ "$3" = "max" ]; then #On prend juste les lignes usines
+		awk -F ';' '$1=="-" && $3=='-' {print $2 ";" $4/1000}' "$1" > tri_max.txt
+		(echo "Station;Capacité"; ./exec_AVL tri_max.txt) > vol_max.dat
+	elif [ "$3" = "src" ]; then
 	# à compléter
 
-	elif [ "$2" = "real" ]; then
+	elif [ "$3" = "real" ]; then
 	# à compléter
 
-	else; echo "Erreur : Le 2ème argument n'est pas valide."
+	else
+		echo "Erreur : Le 3ème argument n'est pas valide."
+		exit 1
+	fi
 fi
 
-if [ "$1" =  "leaks" ]; then 
+if [ "$2" =  "leaks" ]; then 
 	# à compléter
 
 fi
