@@ -42,22 +42,28 @@ fi
 if [ "$2" = "histo" ]; then
 	if [ "$3" = "max" ]; then #On prend juste les lignes usines
 		awk -F ';' '$1=="-" && $3=='-' {print $2 ";" $4/1000}' "$1" > tri_max.txt
-		(echo "Station;Capacité"; ./exec_AVL tri_max.txt) > vol_max.dat
+		(echo "Station(ID);Capacité maximale de traitement(M.m³/an)"; ./exec_AVL tri_max.txt) > vol_max.dat
 	elif [ "$3" = "src" ]; then #On prend les lignes sources -> usines
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" $4/1000}' "$1" > tri_capt.txt
-		(echo "Station;Volume"; ./exec_AVL tri_capt.txt) > vol_captation.txt
-	elif [ "$3" = "real" ]; then
-		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" ($4 * (1 - $5)) / 1000}' "$1" > tri_reel.txt
-		(echo "Station;Volume"; ./exec_AVL tri_reel.txt) > vol_traitement.tmp
+		(echo "Station(ID);Volume total capté depuis les sources(M.m³/an)"; ./exec_AVL tri_capt.txt) > vol_captation.txt
+	elif [ "$3" = "real" ]; then #On prend les lignes sources -> usines mais on enlève le volume de fuite du volume total
+		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" ($4 * (1 - $5/100)) / 1000}' "$1" > tri_reel.txt
+		(echo "Station(ID);Volume total traité(M.m³/an)"; ./exec_AVL tri_reel.txt) > vol_traitement.tmp
 	else
 		echo "Erreur : Le 3ème argument n'est pas valide."
 		exit 1
 	fi
 fi
 
-if [ "$2" =  "leaks" ]; then 
-	# à compléter
-
+if [ "$2" =  "leaks" ]; then
+	if [ -z "$3" ]; then
+		echo "Erreur : Leak a besoin d'un identifiant d'usine pour son 3ème argument."
+		exit 1
+	fi
+	awk -F ';' -v id="$3" '($1=="-" && $2==id) || ($1==id) {print $0}' "$1" > liste_leaks.txt
+	if [ $(./exec_fuites liste_leaks.txt) e -1 ]; then
+		echo "Erreur : L'identifiant d'usine n'existe pas."
+		exit 1
+	fi
+	(echo "Station(ID);Volume fuité(M.m^3/an)"; cat liste_leaks.txt; echo "$(./exec_fuites listes_leaks.txt) M.m^3 sont perdues par an.") > vol_fuites.dat
 fi
-
-
