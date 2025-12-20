@@ -43,12 +43,12 @@ if [ "$2" = "histo" ]; then
 	if [ "$3" = "max" ]; then #On prend juste les lignes usines
 		awk -F ';' '$1=="-" && $3=='-' {print $2 ";" $4/1000}' "$1" > tri_max.txt
 		(echo "Station;Capacité"; ./exec_AVL tri_max.txt) > vol_max.dat
-	elif [ "$3" = "src" ]; then
+	elif [ "$3" = "src" ]; then #On prend les lignes sources -> usines
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" $4/1000}' "$1" > tri_capt.txt
 		(echo "Station;Volume"; ./exec_AVL tri_capt.txt) > vol_captation.txt
 	elif [ "$3" = "real" ]; then
-	# à compléter
-
+		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" ($4 * (1 - $5)) / 1000}' "$1" > tri_reel.txt
+		(echo "Station;Volume"; ./exec_AVL tri_reel.txt) > vol_traitement.tmp
 	else
 		echo "Erreur : Le 3ème argument n'est pas valide."
 		exit 1
