@@ -56,12 +56,12 @@ if [ "$2" = "histo" ]; then
 fi
 
 if [ "$2" =  "leaks" ]; then
-	if [ -z "$3" ]; then
+	if [ -z "$3" ]; then #Cas où il n'y a pas le 3ème argument
 		echo "Erreur : Leak a besoin d'un identifiant d'usine pour son 3ème argument."
 		exit 1
-	fi
+	fi #On prend les lignes usines avec le bonne ID et toutes les autres qui en découlent
 	awk -F ';' -v id="$3" '($1=="-" && $2==id) || ($1==id) {print $0}' "$1" > liste_leaks.txt
-	if [ $(./exec_fuites liste_leaks.txt) e -1 ]; then
+	if [ $(./exec_fuites liste_leaks.txt) e -1 ]; then #Cas où l'ID est invalide
 		echo "Erreur : L'identifiant d'usine n'existe pas."
 		exit 1
 	fi
