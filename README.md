@@ -66,7 +66,7 @@ Le volume des pertes (en M.m³/an) est ajouté au fichier 'leaks.dat'. Si l’us
 
 ## Génération des histogrammes en image
 
-Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir des fichiers 'histo_*.dat', on utilise Gnuplot pour créer ces visuels. Un exemple de script Gnuplot :
+Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir du fichier 'vol_max.dat', on utilise Gnuplot pour créer ces visuels. Un exemple de script Gnuplot :
 
 ```bash
 gnuplot <<'EOF'
