@@ -102,7 +102,3 @@ Pour supprimer l’exécutable et les objets générés par la compilation :
 make clean
 
 ```
-
-```
-
-```
