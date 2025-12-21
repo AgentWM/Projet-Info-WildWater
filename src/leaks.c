@@ -117,5 +117,5 @@ int fuites_calculer(const char *fichier_donnees, const char *id_usine, const cha
     usine_liberer(racine_usines);
     network_avl_free(racine_noeuds);
     
-    return 0;  // Succès
+    return 0; 
 }
