@@ -7,128 +7,128 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define LINE_MAX_LEN 2048
-#define COL_COUNT 5
+#define LONGUEUR_MAX_LIGNE 2048
+#define NOMBRE_COLONNES 5
 
-static void chomp(char *s) {
+static void supprimer_saut_ligne(char *s) {
     if (!s) {
         return;
     }
-    size_t len = strlen(s);
-    while (len > 0 && (s[len - 1] == '\n' || s[len - 1] == '\r')) {
-        s[--len] = '\0';
+    size_t longueur = strlen(s);
+    while (longueur > 0 && (s[longueur - 1] == '\n' || s[longueur - 1] == '\r')) {
+        s[--longueur] = '\0';
     }
 }
 
-static char *trim_field(char *field) {
-    if (!field) {
+static char *nettoyer_champ(char *champ) {
+    if (!champ) {
         return NULL;
     }
-    while (*field == ' ' || *field == '\t') {
-        field++;
+    while (*champ == ' ' || *champ == '\t') {
+        champ++;
     }
-    size_t len = strlen(field);
-    while (len > 0 && (field[len - 1] == ' ' || field[len - 1] == '\t')) {
-        field[--len] = '\0';
+    size_t longueur = strlen(champ);
+    while (longueur > 0 && (champ[longueur - 1] == ' ' || champ[longueur - 1] == '\t')) {
+        champ[--longueur] = '\0';
     }
-    return field;
+    return champ;
 }
 
-static int split_semicolon_line(char *line, char **cols, int max_cols) {
-    if (!line || !cols || max_cols <= 0) {
+static int decouper_ligne_point_virgule(char *ligne, char **colonnes, int max_colonnes) {
+    if (!ligne || !colonnes || max_colonnes <= 0) {
         return 0;
     }
 
-    chomp(line);
-    size_t total_len = strlen(line);
-    char *empty_slot = line + total_len;
+    supprimer_saut_ligne(ligne);
+    size_t longueur_totale = strlen(ligne);
+    char *emplacement_vide = ligne + longueur_totale;
 
-    int count = 0;
-    char *cursor = line;
-    while (count < max_cols) {
-        cols[count++] = cursor;
-        char *sep = strchr(cursor, ';');
-        if (!sep) {
+    int compte = 0;
+    char *curseur = ligne;
+    while (compte < max_colonnes) {
+        colonnes[compte++] = curseur;
+        char *separateur = strchr(curseur, ';');
+        if (!separateur) {
             break;
         }
-        *sep = '\0';
-        cursor = sep + 1;
+        *separateur = '\0';
+        curseur = separateur + 1;
     }
 
-    for (int i = 0; i < count; ++i) {
-        cols[i] = trim_field(cols[i]);
+    for (int i = 0; i < compte; ++i) {
+        colonnes[i] = nettoyer_champ(colonnes[i]);
     }
 
-    while (count < max_cols) {
-        cols[count++] = empty_slot;
+    while (compte < max_colonnes) {
+        colonnes[compte++] = emplacement_vide;
     }
 
-    return count;
+    return compte;
 }
 
-static int starts_with(const char *s, const char *prefix) {
-    if (!s || !prefix) {
+static int commence_par(const char *s, const char *prefixe) {
+    if (!s || !prefixe) {
         return 0;
     }
-    size_t lp = strlen(prefix);
-    return strncmp(s, prefix, lp) == 0;
+    size_t long_p = strlen(prefixe);
+    return strncmp(s, prefixe, long_p) == 0;
 }
 
-static int is_dash(const char *s) {
+static int est_tiret(const char *s) {
     return !s || s[0] == '\0' || strcmp(s, "-") == 0;
 }
 
-static int is_source(const char *s) {
-    return starts_with(s, "Spring ") ||
-           starts_with(s, "Source ") ||
-           starts_with(s, "Well ") ||
-           starts_with(s, "Well field ") ||
-           starts_with(s, "Fountain ") ||
-           starts_with(s, "Resurgence ");
+static int est_source(const char *s) {
+    return commence_par(s, "Spring ") ||
+           commence_par(s, "Source ") ||
+           commence_par(s, "Well ") ||
+           commence_par(s, "Well field ") ||
+           commence_par(s, "Fountain ") ||
+           commence_par(s, "Resurgence ");
 }
 
-static int is_facility(const char *s) {
-    return starts_with(s, "Facility complex ") ||
-           starts_with(s, "Facility complex #") ||
-           starts_with(s, "Plant ") ||
-           starts_with(s, "Module ") ||
-           starts_with(s, "Unit ");
+static int est_installation(const char *s) {
+    return commence_par(s, "Facility complex ") ||
+           commence_par(s, "Facility complex #") ||
+           commence_par(s, "Plant ") ||
+           commence_par(s, "Module ") ||
+           commence_par(s, "Unit ");
 }
 
-int csv_parse_for_histo(const char *filename, Usine **racine) {
-    if (!filename || !racine) {
+int csv_analyser_pour_histo(const char *nom_fichier, Usine **racine) {
+    if (!nom_fichier || !racine) {
         return 1;
     }
 
-    FILE *f = fopen(filename, "r");
+    FILE *f = fopen(nom_fichier, "r");
     if (!f) {
-        fprintf(stderr, "Erreur: impossible d'ouvrir %s\n", filename);
+        fprintf(stderr, "Erreur: impossible d'ouvrir %s\n", nom_fichier);
         return 1;
     }
 
-    char line[LINE_MAX_LEN];
-    char *cols[COL_COUNT];
+    char ligne[LONGUEUR_MAX_LIGNE];
+    char *colonnes[NOMBRE_COLONNES];
 
-    while (fgets(line, sizeof(line), f)) {
-        int read = split_semicolon_line(line, cols, COL_COUNT);
-        if (read < COL_COUNT) {
+    while (fgets(ligne, sizeof(ligne), f)) {
+        int lus = decouper_ligne_point_virgule(ligne, colonnes, NOMBRE_COLONNES);
+        if (lus < NOMBRE_COLONNES) {
             continue;
         }
 
-        const char *c2 = cols[1];
-        const char *c3 = cols[2];
-        const char *c4 = cols[3];
-        const char *c5 = cols[4];
+        const char *c2 = colonnes[1];
+        const char *c3 = colonnes[2];
+        const char *c4 = colonnes[3];
+        const char *c5 = colonnes[4];
 
-        if (is_source(c2) && is_facility(c3)) {
-            if (!is_dash(c4) && !is_dash(c5)) {
+        if (est_source(c2) && est_installation(c3)) {
+            if (!est_tiret(c4) && !est_tiret(c5)) {
                 double volume_capte = atof(c4);
                 double fuite = atof(c5);
                 double volume_reel = volume_capte * (1.0 - fuite / 100.0);
                 *racine = usine_inserer(*racine, c3, 0, volume_capte, volume_reel);
             }
-        } else if (is_facility(c2) && is_dash(c3)) {
-            if (!is_dash(c4)) {
+        } else if (est_installation(c2) && est_tiret(c3)) {
+            if (!est_tiret(c4)) {
                 long capacite = atol(c4);
                 *racine = usine_inserer(*racine, c2, capacite, 0.0, 0.0);
             }
@@ -139,59 +139,59 @@ int csv_parse_for_histo(const char *filename, Usine **racine) {
     return 0;
 }
 
-int csv_parse_for_leaks(const char *filename, Usine **racine_usines, NodeAVL **racine_nodes) {
-    if (!filename || !racine_usines || !racine_nodes) {
+int csv_analyser_pour_fuites(const char *nom_fichier, Usine **racine_usines, NodeAVL **racine_noeuds) {
+    if (!nom_fichier || !racine_usines || !racine_noeuds) {
         return 1;
     }
 
-    FILE *f = fopen(filename, "r");
+    FILE *f = fopen(nom_fichier, "r");
     if (!f) {
-        fprintf(stderr, "Erreur: impossible d'ouvrir %s\n", filename);
+        fprintf(stderr, "Erreur: impossible d'ouvrir %s\n", nom_fichier);
         return 1;
     }
 
-    char line[LINE_MAX_LEN];
-    char *cols[COL_COUNT];
+    char ligne[LONGUEUR_MAX_LIGNE];
+    char *colonnes[NOMBRE_COLONNES];
 
-    while (fgets(line, sizeof(line), f)) {
-        int read = split_semicolon_line(line, cols, COL_COUNT);
-        if (read < COL_COUNT) {
+    while (fgets(ligne, sizeof(ligne), f)) {
+        int lus = decouper_ligne_point_virgule(ligne, colonnes, NOMBRE_COLONNES);
+        if (lus < NOMBRE_COLONNES) {
             continue;
         }
 
-        const char *c1 = cols[0];
-        const char *c2 = cols[1];
-        const char *c3 = cols[2];
-        const char *c4 = cols[3];
-        const char *c5 = cols[4];
+        const char *c1 = colonnes[0];
+        const char *c2 = colonnes[1];
+        const char *c3 = colonnes[2];
+        const char *c4 = colonnes[3];
+        const char *c5 = colonnes[4];
 
-        if (is_source(c2) && is_facility(c3)) {
-            if (!is_dash(c4) && !is_dash(c5)) {
+        if (est_source(c2) && est_installation(c3)) {
+            if (!est_tiret(c4) && !est_tiret(c5)) {
                 double v_capte = atof(c4);
                 double v_reel = v_capte * (1.0 - atof(c5) / 100.0);
                 *racine_usines = usine_inserer(*racine_usines, c3, 0, v_capte, v_reel);
             }
-        } else if (is_facility(c2) && is_dash(c3)) {
-            if (!is_dash(c4)) {
+        } else if (est_installation(c2) && est_tiret(c3)) {
+            if (!est_tiret(c4)) {
                 *racine_usines = usine_inserer(*racine_usines, c2, atol(c4), 0.0, 0.0);
             }
         }
 
-        if (!is_dash(c2) && !is_dash(c3) && !is_dash(c5) &&
-            !is_source(c2) && (is_dash(c1) || is_facility(c1))) {
+        if (!est_tiret(c2) && !est_tiret(c3) && !est_tiret(c5) &&
+            !est_source(c2) && (est_tiret(c1) || est_installation(c1))) {
 
-            Node *parent = network_avl_find(*racine_nodes, c2);
+            Node *parent = network_avl_find(*racine_noeuds, c2);
             if (!parent) {
-                *racine_nodes = network_avl_insert(*racine_nodes, c2, &parent);
+                *racine_noeuds = network_avl_insert(*racine_noeuds, c2, &parent);
             }
 
-            Node *child = network_avl_find(*racine_nodes, c3);
-            if (!child) {
-                *racine_nodes = network_avl_insert(*racine_nodes, c3, &child);
+            Node *enfant = network_avl_find(*racine_noeuds, c3);
+            if (!enfant) {
+                *racine_noeuds = network_avl_insert(*racine_noeuds, c3, &enfant);
             }
 
-            child->fuite = atof(c5);
-            network_add_child(parent, child);
+            enfant->fuite = atof(c5);
+            network_add_child(parent, enfant);
         }
     }
 
