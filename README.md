@@ -5,17 +5,17 @@ Projet Info 3 à finir avant le 21/12/25
 
 ## Description
 
-Ce projet met en place un pipeline Shell + C pour analyser un vaste fichier CSV décrivant un réseau de distribution d’eau. L’outil extrait :
-- des histogrammes résumant, pour chaque usine de traitement, la capacité annuelle maximale, le volume capté et le volume réellement traité (données agrégées en M.m³/an) ;
+Ce projet met en place un pipeline Shell + C pour analyser un fichier CSV qui décrit un réseau de distribution d’eau. L’outil extrait :
+- des histogrammes résumant, pour chaque usine de traitement, la capacité annuelle maximale, le volume capté par les sources et le volume réellement traité (données en M.m³/an)
 - le volume total perdu par une usine sur tout son réseau aval, en tenant compte des fuites à chaque tronçon du graphe.
 
-L’algorithme C repose sur deux AVL : l’un pour agréger les usines et leurs volumes, l’autre pour indexer les nœuds du réseau (stockages, jonctions, raccordements, usagers) et propager les pertes. Le script Shell `Projet.sh` orchestre la compilation via `make`, la validation des arguments et l’invocation de l’exécutable `wildwater`.
+L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volumes, l’autre pour indexer les nœuds du réseau (stockages, jonctions, raccordements, usagers) et calculer les pertes. Le script Shell `Projet.sh` gère la compilation avec `make`, fait la validation des arguments et s'occupe de l’exécutable `wildwater`.
 
 ## Prérequis
 
 - macOS ou Linux avec `clang` (ou un compilateur C compatible) ;
 - `make` (utilisé par le script) ;
-- un fichier CSV conforme au format décrit dans `Sujet.pdf` (exemple fourni : `c-wildwater_v0.dat`).
+- un fichier CSV conforme au format décrit dans `Sujet.pdf` (exemple fourni : `c-wildwater_v0.dat` ou la v3).
 
 ## Compilation
 
@@ -23,7 +23,7 @@ L’algorithme C repose sur deux AVL : l’un pour agréger les usines et leurs 
 make
 ```
 
-L’exécutable `wildwater` est produit à la racine du projet. La cible `clean` supprime l’exécutable et les objets intermédiaires.
+L’exécutable `wildwater` est produit au début du projet et `clean` supprime l’exécutable et les objets intermédiaires.
 
 ## Utilisation du script
 
@@ -43,12 +43,12 @@ Exemples :
 ./Projet.sh c-wildwater_v0.dat histo real
 ```
 
-Chaque commande crée un fichier `histo_<mode>.dat` à deux colonnes :
+Chaque commande crée un fichier `vol_<max|captation|traitement>.dat` à deux colonnes :
 
-- `identifier` ;
+- Station(ID) qui correspond à "identifier" dans le pdf mais un simple verbe pour une définir une colonne n'est pas le plus intéressant à notre avis. ;
 - la mesure correspondant au mode demandé, déjà convertie en M.m³/an.
 
-Les usines sont triées par identifiant décroissant. Ces fichiers peuvent ensuite être exploités par Gnuplot ou tout autre outil graphique pour tracer les barres demandées (top 50 / top 10, etc.).
+Les usines sont triées par identifiant décroissant. Ces fichiers peuvent ensuite être exploités par Gnuplot pour tracer les barres demandées (top 50 plus petites, top 10 plus grandes).
 
 ### Calcul des fuites d’une usine
 
@@ -62,11 +62,11 @@ Exemple :
 ./Projet.sh c-wildwater_v0.dat leaks "Plant #JA200000I"
 ```
 
-Le volume des pertes (en M.m³/an) est ajouté au fichier `leaks.dat`. Si l’usine n’existe pas dans les données, la valeur `-1` est consignée.
+Le volume des pertes (en M.m³/an) est ajouté au fichier `leaks.dat`. Si l’usine n’existe pas dans les données, la valeur `-1` est ajouté.
 
 ## Génération des histogrammes en image
 
-Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir des fichiers `histo_*.dat`, vous pouvez utiliser Gnuplot (ou un autre outil) pour créer ces visuels. Un exemple de script Gnuplot :
+Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir des fichiers `histo_*.dat`, on utilise Gnuplot pour créer ces visuels. Un exemple de script Gnuplot :
 
 ```bash
 gnuplot <<'EOF'
@@ -80,8 +80,6 @@ set style fill solid 1.0
 plot '<(tail -n +2 histo_max.dat | sort -t";" -k2,2nr | head -n 10)' using 2:xtic(1) title 'Capacité max'
 EOF
 ```
-
-Adaptez le tri (`head`/`tail`) pour sélectionner le sous-ensemble voulu et répétez l’opération en changeant le fichier d’entrée (`histo_src.dat`, `histo_real.dat`) selon le graphique souhaité.
 
 ## Nettoyage
 
