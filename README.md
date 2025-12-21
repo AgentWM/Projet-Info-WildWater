@@ -1,5 +1,11 @@
 # 🌊 Projet-Info-WildWater
 
+## 👥 Auteurs
+
+- **Youcef BEN ABDESSELAM**
+- **Maxence MARCHAND**
+- **Kylian VANDEL**
+
 ## 📝 Description
 
 Ce projet met en place un pipeline **Shell + C** pour analyser un fichier CSV qui décrit un réseau de distribution d’eau. L’outil extrait :
