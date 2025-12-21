@@ -11,5 +11,5 @@ typedef enum {
 
 int csv_analyser_pour_histo(const char *nom_fichier, Usine **racine);
 int csv_analyser_pour_fuites(const char *nom_fichier, Usine **racine_usines,
-                              NodeAVL **racine_noeuds);
+                              NoeudAVL **racine_noeuds);
 #endif
