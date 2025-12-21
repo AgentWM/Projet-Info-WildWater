@@ -204,20 +204,20 @@ int csv_analyser_pour_fuites(const char *nom_fichier, Usine **racine_usines, Noe
             !est_source(c2) && (est_tiret(c1) || est_installation(c1))) {
 
             // Recherche ou création du nœud parent
-            Noeud *parent = network_avl_find(*racine_noeuds, c2);
+            Noeud *parent = reseau_avl_rechercher(*racine_noeuds, c2);
             if (!parent) {
-                *racine_noeuds = network_avl_insert(*racine_noeuds, c2, &parent);
+                *racine_noeuds = reseau_avl_inserer(*racine_noeuds, c2, &parent);
             }
 
             // Recherche ou création du nœud enfant
-            Noeud *enfant = network_avl_find(*racine_noeuds, c3);
+            Noeud *enfant = reseau_avl_rechercher(*racine_noeuds, c3);
             if (!enfant) {
-                *racine_noeuds = network_avl_insert(*racine_noeuds, c3, &enfant);
+                *racine_noeuds = reseau_avl_inserer(*racine_noeuds, c3, &enfant);
             }
 
             // Définit la fuite et établit la relation parent-enfant
             enfant->fuite = atof(c5);
-            network_add_child(parent, enfant);
+            reseau_ajouter_enfant(parent, enfant);
         }
     }
 
