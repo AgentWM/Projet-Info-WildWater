@@ -1,7 +1,7 @@
 #ifndef LEAKS_H
 #define LEAKS_H
 
-#include "csv.h"
+#include "CSV.h"
 
 int leaks_compute(const char *datafile,
                   const char *usine_id,
