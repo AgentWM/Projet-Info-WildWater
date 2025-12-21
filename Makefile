@@ -30,4 +30,4 @@ exec_fuites: $(OBJ_FUITES)
 
 #suppression des fichiers générés avec make clean
 clean:
-	rm -f *.o exec_AVL exec_fuites
+	rm -f *.o exec_AVL exec_fuites vol_max.dat vol_captation.dat vol_traitement.dat
