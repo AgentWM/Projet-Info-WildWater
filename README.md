@@ -9,7 +9,7 @@ Ce projet met en place un pipeline Shell + C pour analyser un fichier CSV qu
 - des histogrammes résumant, pour chaque usine de traitement, la capacité annuelle maximale, le volume capté par les sources et le volume réellement traité (données en M.m³/an).
 - le volume total perdu par une usine sur tout son réseau aval, en tenant compte des fuites à chaque tronçon du graphe.
 
-L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volumes, l’autre pour indexer les nœuds du réseau (stockages, jonctions, raccordements, usagers) et calculer les pertes. Le script Shell `Projet.sh` gère la compilation avec `make`, fait la validation des arguments et s'occupe de l’exécutable `wildwater`.
+L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volumes, l’autre pour indexer les nœuds du réseau (stockages, jonctions, raccordements, usagers) et calculer les pertes. Le script Shell 'Projet.sh' gère la compilation avec 'make', fait la validation des arguments et s'occupe de 2 exécutables selon le résultats voulus 'exec_AVL' ou 'exec_fuites'.
 
 ## Prérequis
 
@@ -23,11 +23,11 @@ L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volu
 make
 ```
 
-L’exécutable `wildwater` est produit au début du projet et `clean` supprime l’exécutable et les objets intermédiaires.
+Les 2 exécutables sont produits au début du script et `clean` supprime l’exécutable et les objets intermédiaires.
 
 ## Utilisation du script
 
-Toutes les commandes passent par `Projet.sh`, qui vérifie les arguments, compile si nécessaire, appelle `./wildwater` puis affiche la durée d’exécution.
+Toutes les commandes passent par 'Projet.sh', qui vérifie les arguments, compile si nécessaire, appelle './exec_AVL' si le 2ème argument est histo, ou appelle './exec_fuites' si le 2ème argument est leaks puis affiche la durée d’exécution.
 
 ### Génération d’un histogramme
 
@@ -45,7 +45,7 @@ Exemples :
 
 Chaque commande crée un fichier `vol_<max|captation|traitement>.dat` à deux colonnes :
 
-- Station(ID) qui correspond à "identifier" dans le pdf mais un simple verbe pour définir une colonne n'est pas le plus intéressant à notre avis. ;
+- Station(ID) qui correspond à "identifier" dans le pdf mais un simple verbe pour définir une colonne n'est pas le plus intéressant à notre avis.
 - la mesure correspondant au mode demandé, déjà convertie en M.m³/an.
 
 Les usines sont triées par identifiant décroissant. Ces fichiers peuvent ensuite être exploités par Gnuplot pour tracer les barres demandées (top 50 plus petites, top 10 plus grandes).
@@ -62,11 +62,11 @@ Exemple :
 ./Projet.sh c-wildwater_v0.dat leaks "Plant #JA200000I"
 ```
 
-Le volume des pertes (en M.m³/an) est ajouté au fichier `leaks.dat`. Si l’usine n’existe pas dans les données, la valeur `-1` est ajouté.
+Le volume des pertes (en M.m³/an) est ajouté au fichier 'leaks.dat'. Si l’usine n’existe pas dans les données, la valeur '-1' est ajouté.
 
 ## Génération des histogrammes en image
 
-Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir des fichiers `histo_*.dat`, on utilise Gnuplot pour créer ces visuels. Un exemple de script Gnuplot :
+Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir des fichiers 'histo_*.dat', on utilise Gnuplot pour créer ces visuels. Un exemple de script Gnuplot :
 
 ```bash
 gnuplot <<'EOF'
