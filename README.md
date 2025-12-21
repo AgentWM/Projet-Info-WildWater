@@ -6,7 +6,7 @@ Projet Info 3 à finir avant le 21/12/25
 ## Description
 
 Ce projet met en place un pipeline Shell + C pour analyser un fichier CSV qui décrit un réseau de distribution d’eau. L’outil extrait :
-- des histogrammes résumant, pour chaque usine de traitement, la capacité annuelle maximale, le volume capté par les sources et le volume réellement traité (données en M.m³/an)
+- des histogrammes résumant, pour chaque usine de traitement, la capacité annuelle maximale, le volume capté par les sources et le volume réellement traité (données en M.m³/an).
 - le volume total perdu par une usine sur tout son réseau aval, en tenant compte des fuites à chaque tronçon du graphe.
 
 L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volumes, l’autre pour indexer les nœuds du réseau (stockages, jonctions, raccordements, usagers) et calculer les pertes. Le script Shell `Projet.sh` gère la compilation avec `make`, fait la validation des arguments et s'occupe de l’exécutable `wildwater`.
@@ -45,7 +45,7 @@ Exemples :
 
 Chaque commande crée un fichier `vol_<max|captation|traitement>.dat` à deux colonnes :
 
-- Station(ID) qui correspond à "identifier" dans le pdf mais un simple verbe pour une définir une colonne n'est pas le plus intéressant à notre avis. ;
+- Station(ID) qui correspond à "identifier" dans le pdf mais un simple verbe pour définir une colonne n'est pas le plus intéressant à notre avis. ;
 - la mesure correspondant au mode demandé, déjà convertie en M.m³/an.
 
 Les usines sont triées par identifiant décroissant. Ces fichiers peuvent ensuite être exploités par Gnuplot pour tracer les barres demandées (top 50 plus petites, top 10 plus grandes).
