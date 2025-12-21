@@ -90,7 +90,7 @@ Les usines sont triées par identifiant décroissant. Ces fichiers sont prêts p
 **Exemple :**
 
 ```bash
-./Projet.sh c-wildwater_v0.dat leaks "Plant #JA200000I"
+./Projet.sh data/c-wildwater_v0.dat leaks "Plant #JA200000I"
 
 ```
 
