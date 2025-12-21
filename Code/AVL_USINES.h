@@ -5,9 +5,9 @@
 
 typedef struct Usine {
     char *id;
-    long capacite;          /* k.m3.year-1 */
-    double volume_capte;    /* k.m3.year-1 */
-    double volume_reel;     /* k.m3.year-1 */
+    long capacite;          /* k.m3.an-1 */
+    double volume_capte;    /* k.m3.an-1 */
+    double volume_reel;     /* k.m3.an-1 */
     int hauteur;
     struct Usine *gauche;
     struct Usine *droit;
