@@ -1,4 +1,4 @@
-#include "histo.h"
+#include "HISTO.h"
 
 #include <stdio.h>
 
