@@ -1,18 +1,19 @@
 #include "LEAKS.h"
+#include "NETWORK.h" 
 #include <stdio.h>
 
 // Compte le nombre d'enfants directs d'un nœud dans le réseau
-static int compter_enfants(Node *n) {
+static int compter_enfants(Noeud *n) {
     int compte = 0;
     // Parcourt la liste chaînée des enfants
-    for (Child *c = n ? n->children : NULL; c; c = c->next) {
+    for (Enfant *c = n ? n->enfants : NULL; c; c = c->suivant) {
         compte++;
     }
     return compte;
 }
 
 // Calcule récursivement les fuites totales dans l'arbre à partir d'un nœud
-static double calculer_fuites(Node *n, double volume) {
+static double calculer_fuites(Noeud *n, double volume) {
     if (!n || volume <= 0.0) {
         return 0.0;
     }
@@ -32,8 +33,8 @@ static double calculer_fuites(Node *n, double volume) {
     double total = pertes_locales;
     
     // Calcul récursif des fuites pour chaque enfant
-    for (Child *c = n->children; c; c = c->next) {
-        total += calculer_fuites(c->node, part);
+    for (Enfant *c = n->enfants; c; c = c->suivant) {
+        total += calculer_fuites(c->noeud, part);
     }
     
     return total;
@@ -48,7 +49,7 @@ int fuites_calculer(const char *fichier_donnees, const char *id_usine, const cha
     
     // Initialisation des structures de données
     Usine *racine_usines = NULL;
-    NodeAVL *racine_noeuds = NULL;
+    NoeudAVL *racine_noeuds = NULL;
     
     // Parse le CSV et construit l'arbre d'usines + le réseau de nœuds
     if (csv_analyser_pour_fuites(fichier_donnees, &racine_usines, &racine_noeuds) != 0) {
@@ -61,7 +62,7 @@ int fuites_calculer(const char *fichier_donnees, const char *id_usine, const cha
     
     if (u) {
         // Recherche le nœud correspondant dans le réseau
-        Node *noeud_usine = network_avl_find(racine_noeuds, id_usine);
+        Noeud *noeud_usine = reseau_avl_rechercher(racine_noeuds, id_usine);
         if (noeud_usine) {
             // Récupère le volume réel produit par l'usine
             double volume_initial = u->volume_reel;
@@ -73,8 +74,8 @@ int fuites_calculer(const char *fichier_donnees, const char *id_usine, const cha
                 double total_pertes_k = 0.0;
                 
                 // Calcule les fuites totales pour chaque branche du réseau
-                for (Child *c = noeud_usine->children; c; c = c->next) {
-                    total_pertes_k += calculer_fuites(c->node, volume_par_stockage);
+                for (Enfant *c = noeud_usine->enfants; c; c = c->suivant) {
+                    total_pertes_k += calculer_fuites(c->noeud, volume_par_stockage);
                 }
                 
                 // Conversion de kWh en MWh (division par 1000)
@@ -94,7 +95,7 @@ int fuites_calculer(const char *fichier_donnees, const char *id_usine, const cha
     if (!fsortie) {
         fprintf(stderr, "Erreur: impossible d'ouvrir %s en écriture\n", fichier_sortie);
         usine_liberer(racine_usines);
-        network_avl_free(racine_noeuds);
+        reseau_avl_liberer(racine_noeuds);
         return 2;
     }
     
@@ -115,7 +116,7 @@ int fuites_calculer(const char *fichier_donnees, const char *id_usine, const cha
     // Fermeture et libération de la mémoire
     fclose(fsortie);
     usine_liberer(racine_usines);
-    network_avl_free(racine_noeuds);
+    reseau_avl_liberer(racine_noeuds);
     
     return 0; 
 }
