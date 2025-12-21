@@ -1,4 +1,4 @@
-#include "avl.h"
+#include "AVL.h"
 
 int max(int a, int b) {
     if (a > b)
@@ -123,4 +123,5 @@ void libererArbre(Station* station) {
         free(station->id);
         free(station);
     }
+
 }
