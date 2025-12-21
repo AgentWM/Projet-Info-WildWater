@@ -55,9 +55,9 @@ Toutes les commandes passent par `Projet.sh`. Il vérifie les arguments, compile
 **Exemples :**
 
 ```bash
-./Projet.sh c-wildwater_v0.dat histo max
-./Projet.sh c-wildwater_v0.dat histo src
-./Projet.sh c-wildwater_v0.dat histo real
+./Projet.sh data/c-wildwater_v0.dat histo max
+./Projet.sh data/c-wildwater_v0.dat histo src
+./Projet.sh data/c-wildwater_v0.dat histo real
 
 ```
 
