@@ -139,7 +139,7 @@ int csv_analyser_pour_histo(const char *nom_fichier, Usine **racine) {
     return 0;
 }
 
-int csv_analyser_pour_fuites(const char *nom_fichier, Usine **racine_usines, NodeAVL **racine_noeuds) {
+int csv_analyser_pour_fuites(const char *nom_fichier, Usine **racine_usines, NoeudAVL **racine_noeuds) {
     if (!nom_fichier || !racine_usines || !racine_noeuds) {
         return 1;
     }
