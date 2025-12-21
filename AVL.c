@@ -1,4 +1,4 @@
-#include "avl.h"
+#include "AVL.h"
 
 // Fonction utilitaire pour renvoyer le max entre deux entiers
 int max(int a, int b) {
@@ -150,3 +150,4 @@ void libererArbre(Station* station) {
         free(station);
     }
 }
+
