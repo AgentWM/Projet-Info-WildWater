@@ -22,7 +22,7 @@ Le script Shell `Projet.sh` gère la compilation avec `make`, valide les argumen
 - **Système :** macOS ou Linux avec `clang` (ou un compilateur C compatible).
 - **Outil :** `make` (utilisé par le script).
 - **Données :** Un fichier CSV conforme au format décrit dans `Sujet.pdf` (exemple : `c-wildwater_v0.dat` ou la v3).
-- Attention : il faudra télécharger c-wildwater_v3.dat car il était trop volumineux pour le mettre sur le github et le placer dans le dossier data.
+- **Attention :** il faudra télécharger c-wildwater_v3.dat car il était trop volumineux pour le mettre sur le github et le placer dans le dossier data.
 
 ## 📂 Fichiers du projet
 
@@ -50,7 +50,7 @@ chmod +x Projet.sh
 ## 🚀 Utilisation du script
 
 Toutes les commandes passent par `Projet.sh`. Il vérifie les arguments, compile si nécessaire, et appelle l'exécutable approprié (`./exec_AVL` ou `./exec_fuites`) avant d'afficher la durée d’exécution.
-Attention : Lors du lancement du script Projet.sh, ne pas oublier que le fichier 'c-wildwater_v<0,3>.dat' se trouve dans le dossier data, par exemple :
+Attention : Lors du lancement du script Projet.sh, ne pas oublier que le fichier 'c-wildwater_v<0,3>.dat' se trouve dans le dossier data, donc :
 
 ```bash
 ./Projet.sh data/c-wildwater_v3.dat histo max
