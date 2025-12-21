@@ -17,6 +17,10 @@ L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volu
 - `make` (utilisé par le script) ;
 - un fichier CSV conforme au format décrit dans `Sujet.pdf` (exemple fourni : `c-wildwater_v0.dat` ou la v3).
 
+## Fichier à télécharger
+AVL.c ; AVL.h ; AVL_USINES.c ; AVL_USINES.h ; CSV.c ; CSV.h ; HISTO.c ; HISTO.h ; leaks.c ; LEAKS.h ; network.c ; NETWORK.h ; main_avl.c ; main_fuites.c ; Makefile
+Soit un total de 15 fichiers.
+
 ## Compilation
 
 ```bash
