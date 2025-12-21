@@ -2,7 +2,7 @@
 #define CSV_H
 
 #include "AVL_USINES.h"
-#include "network.h"
+#include "NETWORK.h"
 
 typedef enum {
     HISTO_MAX = 0,
