@@ -23,7 +23,7 @@ L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volu
 make
 ```
 
-Les 2 exécutables sont produits au début du script et `clean` supprime l’exécutable et les objets intermédiaires.
+Les 2 exécutables sont produits au début du script et `clean` supprime les exécutables et les objets intermédiaires.
 
 ## Utilisation du script
 
