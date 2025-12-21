@@ -70,7 +70,7 @@ Le volume des pertes (en M.m³/an) est ajouté au fichier 'leaks.dat'. Si l’us
 
 ## Génération des histogrammes en image
 
-Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir du fichier 'vol_max.dat', on utilise Gnuplot pour créer ces visuels (elles se créaient directement avec la commande 'histo max' ou renvoie un message d'erreur si gnuplot n'est pas installé). L'installation de Gnuplot :
+Le sujet demande de produire des images (PNG) présentant les 50 plus petites et les 10 plus grandes usines selon la capacité maximale. À partir du fichier 'vol_max.dat', on utilise Gnuplot pour créer ces visuels (elles se créaient directement avec la commande './Projet.sh <fichier.csv> histo max', ou on renvoie un message d'erreur si gnuplot n'est pas installé). L'installation de Gnuplot :
 
 ```bash
 sudo apt update
