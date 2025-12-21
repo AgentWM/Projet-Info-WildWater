@@ -19,7 +19,7 @@ L’algorithme C repose sur deux AVL : l’un pour unir les usines et leurs volu
 
 ## Fichier à télécharger
 AVL.c ; AVL.h ; AVL_USINES.c ; AVL_USINES.h ; CSV.c ; CSV.h ; HISTO.c ; HISTO.h ; leaks.c ; LEAKS.h ; network.c ; NETWORK.h ; main_avl.c ; main_fuites.c ; Makefile
-Soit un total de 15 fichiers.
+soit un total de 15 fichiers.
 
 ## Compilation
 
