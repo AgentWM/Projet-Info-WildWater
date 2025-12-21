@@ -51,7 +51,7 @@ if [ "$2" = "histo" ]; then
             		gnuplot <<EOF
             		set datafile separator ';'
             		set terminal pngcairo size 1280,720
-            		set output 'histo_max.png'
+            		set output 'vol_max10.png'
             		set title 'Top 10 – Capacité maximale de traitement'
             		set ylabel 'M.m3/an'
             		set xlabel 'Station (ID)'
@@ -72,7 +72,7 @@ EOF
             		gnuplot <<EOF
             		set datafile separator ';'
             		set terminal pngcairo size 1280,720
-            		set output 'histo_min_50.png'
+            		set output 'vol_min50.png'
             		set title 'Les 50 usines avec la capacité la plus faible'
             		set ylabel 'M.m3/an'
             		set xlabel 'Station (ID)'
