@@ -39,7 +39,7 @@ make
 
 ```
 
-> **Note :** Les 2 exécutables sont produits au début du script. La commande `clean` supprime les exécutables et les objets intermédiaires.
+Note : Les 2 exécutables sont produits au début du script. La commande `clean` supprime les exécutables et les objets intermédiaires.
 
 ## 🚀 Utilisation du script
 
