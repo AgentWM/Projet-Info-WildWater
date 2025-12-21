@@ -3,7 +3,7 @@ Projet Info 3 à finir avant le 21/12/25
 
 # Projet-Info-WildWater
 
-## Description
+##📄 Description
 
 Ce projet met en place un pipeline Shell + C pour analyser un fichier CSV qui décrit un réseau de distribution d’eau. L’outil extrait :
 - des histogrammes résumant, pour chaque usine de traitement, la capacité annuelle maximale, le volume capté par les sources et le volume réellement traité (données en M.m³/an).
