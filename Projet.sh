@@ -47,12 +47,12 @@ if [ "$2" = "histo" ]; then
 
 	elif [ "$3" = "src" ]; then #On prend les lignes sources -> usines
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" $4/1000}' "$1" > tri_capt.txt
-		(echo "Station(ID);Volume total capté depuis les sources(M.m³/an)"; ./exec_AVL tri_capt.txt) > vol_captation.txt
+		(echo "Station(ID);Volume total capté depuis les sources(M.m³/an)"; ./exec_AVL tri_capt.txt) > vol_captation.dat
 		rm tri_capt.txt
 
 	elif [ "$3" = "real" ]; then #On prend les lignes sources -> usines mais on enlève le volume de fuite du volume total
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" ($4 * (1 - $5/100)) / 1000}' "$1" > tri_reel.txt
-		(echo "Station(ID);Volume total traité(M.m³/an)"; ./exec_AVL tri_reel.txt) > vol_traitement.tmp
+		(echo "Station(ID);Volume total traité(M.m³/an)"; ./exec_AVL tri_reel.txt) > vol_traitement.dat
 		rm tri_reel.txt
 
 	else
