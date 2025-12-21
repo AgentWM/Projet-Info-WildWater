@@ -66,7 +66,7 @@ if [ "$2" =  "leaks" ]; then
 		echo "Erreur : Leak a besoin d'un identifiant d'usine pour son 3ème argument."
 		exit 1
 	fi #On prend les lignes usines avec le bonne ID et toutes les autres qui en découlent
-	awk -F ';' -v id="$3" '($1=="-" && $2==id) || ($1==id) {print $0}' "$1" > liste_leaks.txt
+	awk -F ';' -v id="$3" '($1=="-" && $2==id) || ($1==id) || ($1=="-" && $3==id) {print $0}' "$1" > liste_leaks.txt
 
 	historique="leaks.dat" #On nous demande d'avoir un fichier historique pour chaque usine qu on regardera
 	if [ ! -f "$historique" ]; then
