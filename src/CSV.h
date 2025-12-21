@@ -1,18 +1,15 @@
 #ifndef CSV_H
 #define CSV_H
-
 #include "AVL_USINES.h"
 #include "NETWORK.h"
 
 typedef enum {
-    HISTO_MAX = 0,
-    HISTO_SRC = 1,
-    HISTO_REAL = 2
-} HistoType;
+    HISTO_MAX = 0,  // Maximum
+    HISTO_SRC = 1,  // Source
+    HISTO_REAL = 2  // Réel
+} TypeHisto;
 
-int csv_parse_for_histo(const char *filename, Usine **racine);
-
-int csv_parse_for_leaks(const char *filename, Usine **racine_usines,
-                        NodeAVL **racine_nodes);
-
+int csv_analyser_pour_histo(const char *nom_fichier, Usine **racine);
+int csv_analyser_pour_fuites(const char *nom_fichier, Usine **racine_usines,
+                              NodeAVL **racine_noeuds);
 #endif
