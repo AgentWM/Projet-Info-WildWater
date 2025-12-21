@@ -45,6 +45,49 @@ if [ "$2" = "histo" ]; then
 		(echo "Station(ID);Capacité maximale de traitement(M.m³/an)"; ./exec_AVL tri_max.txt) > vol_max.dat
 		rm tri_max.txt
 
+		tail -n +2 vol_max.dat | sort -t";" -k2,2nr | head -n 10 > top10_max.dat
+        	#Graphique - 10 plus grandes usines en capacité
+        	if command -v gnuplot &> /dev/null; then
+            		gnuplot <<EOF
+            		set datafile separator ';'
+            		set terminal pngcairo size 1280,720
+            		set output 'histo_max.png'
+            		set title 'Top 10 – Capacité maximale de traitement'
+            		set ylabel 'M.m3/an'
+            		set xlabel 'Station (ID)'
+            		set style data histograms
+            		set style fill solid 1.0 border -1
+            		set boxwidth 0.7
+            		set xtics rotate by -45
+            		plot 'top10_max.dat' using 2:xtic(1) notitle
+EOF
+            	else
+            		echo "Attention : gnuplot n'est pas installé, le graphique n'a pas été généré."
+        	fi
+		rm top10_max.dat
+
+		#Graphique - 50 plus petites usines en capacité
+		tail -n +2 vol_max.dat | sort -t";" -k2,2n | head -n 50 > min50_max.dat
+        	if command -v gnuplot &> /dev/null; then
+            	gnuplot <<EOF
+            	set datafile separator ';'
+            	set terminal pngcairo size 1280,720
+            	set output 'histo_min_50.png'
+            	set title 'Les 50 usines avec la capacité la plus faible'
+            	set ylabel 'M.m3/an'
+            	set xlabel 'Station (ID)'
+            	set style data histograms
+            	set style fill solid 1.0 border -1
+            	set boxwidth 0.8
+            	# Réglages spécifiques pour 50 car ça fait beaucoup...
+            	set xtics rotate by 90 font ",8"
+            	unset grid
+            	set grid y
+            	plot 'min50_max.dat' using 2:xtic(1) notitle
+EOF
+        	fi
+	   	rm min50_max.dat
+
 	elif [ "$3" = "src" ]; then #On prend les lignes sources -> usines
 		awk -F ';' '$1=="-" && $3!="-" {print $3 ";" $4/1000}' "$1" > tri_capt.txt
 		(echo "Station(ID);Volume total capté depuis les sources(M.m³/an)"; ./exec_AVL tri_capt.txt) > vol_captation.dat
