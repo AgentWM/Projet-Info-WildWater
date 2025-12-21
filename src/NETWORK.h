@@ -1,35 +1,32 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-typedef struct Node Node;
-typedef struct Child Child;
-typedef struct NodeAVL NodeAVL;
+typedef struct Noeud Noeud;
+typedef struct Enfant Enfant;
+typedef struct NoeudAVL NoeudAVL;
 
-struct Child {
-    Node *node;
-    Child *next;
+struct Enfant {
+    Noeud *noeud;
+    Enfant *suivant;
 };
 
-struct Node {
+struct Noeud {
     char *id;
     double fuite;
-    Child *children;
+    Enfant *enfants;
 };
 
-struct NodeAVL {
+struct NoeudAVL {
     char *id;
-    Node *node;
-    int height;
-    NodeAVL *left;
-    NodeAVL *right;
+    Noeud *noeud;
+    int hauteur;
+    NoeudAVL *gauche;
+    NoeudAVL *droite;
 };
 
-Node *network_avl_find(NodeAVL *root, const char *id);
-
-NodeAVL *network_avl_insert(NodeAVL *root, const char *id, Node **out_node);
-
-void network_add_child(Node *parent, Node *child);
-
-void network_avl_free(NodeAVL *root);
+Noeud *reseau_avl_rechercher(NoeudAVL *racine, const char *id);
+NoeudAVL *reseau_avl_inserer(NoeudAVL *racine, const char *id, Noeud **noeud_sortie);
+void reseau_ajouter_enfant(Noeud *parent, Noeud *enfant);
+void reseau_avl_liberer(NoeudAVL *racine);
 
 #endif
